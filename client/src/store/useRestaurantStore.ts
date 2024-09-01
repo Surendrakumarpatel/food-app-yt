@@ -88,6 +88,7 @@ export const useRestaurantStore = create<RestaurantState>()(persist((set, get) =
     },
     updateMenuToRestaurant: (updatedMenu: MenuItem) => {
         set((state: any) => {
+            
             if (state.restaurant) {
                 const updatedMenuList = state.restaurant.menus.map((menu: any) => menu._id === updatedMenu._id ? updatedMenu : menu);
                 return {
@@ -97,6 +98,7 @@ export const useRestaurantStore = create<RestaurantState>()(persist((set, get) =
                     }
                 }
             }
+            // if state.restaruant is undefined then return state
             return state;
         })
     },

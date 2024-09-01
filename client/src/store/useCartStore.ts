@@ -12,7 +12,7 @@ export const useCartStore = create<CartState>()(persist((set) => ({
             if (exisitingItem) {
                 // already added in cart then inc qty
                 return {
-                    cart: state.cart.map((cartItem) => cartItem._id === item._id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
+                    cart: state?.cart.map((cartItem) => cartItem._id === item._id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
                     )
                 };
             } else {
