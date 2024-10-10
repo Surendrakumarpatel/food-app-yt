@@ -29,8 +29,9 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --button:#D19254;
-    --hoverButtonColor:#d18c47;
+    --button:#fcc705ff;
+    --hoverButtonColor:#fdba01;
+    --backgroundColor:#1c1b69e0;
   }
 
   .dark {

@@ -4,6 +4,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { Loader2 } from "lucide-react";
 import { FormEvent, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
 
 const VerifyEmail = () => {
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
@@ -41,16 +42,16 @@ const VerifyEmail = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen w-full">
-      <div className="p-8 rounded-md w-full max-w-md flex flex-col gap-10 border border-gray-200">
+    <div className="flex items-center justify-center min-h-screen bg-backgroundColor">
+      <div className="md:p-8 w-full max-w-md rounded-lg md:border border-orange mx-4">
         <div className="text-center">
-          <h1 className="font-extrabold text-2xl">Verify your email</h1>
-          <p className="text-sm text-gray-600">
+          <h1 className="font-extrabold text-2xl mb-5">Verify your email</h1>
+          <p className="text-sm text-orange mb-4">
             Enter the 6 digit code sent to your email address
           </p>
         </div>
         <form onSubmit={submitHandler}>
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-3">
             {otp.map((letter: string, idx: number) => (
               <Input
                 key={idx}
@@ -68,6 +69,9 @@ const VerifyEmail = () => {
               />
             ))}
           </div>
+          <div className="mb-14"></div>
+          <Separator />
+
           {loading ? (
             <Button
               disabled
@@ -77,7 +81,7 @@ const VerifyEmail = () => {
               Please wait
             </Button>
           ) : (
-            <Button className="bg-orange hover:bg-hoverOrange mt-6 w-full">
+            <Button className="bg-orange hover:bg-hoverOrange mt-8 w-full text-backgroundColor">
               Verify
             </Button>
           )}
