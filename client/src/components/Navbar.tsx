@@ -47,10 +47,10 @@ const Navbar = () => {
   const { setTheme } = useThemeStore();
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto ">
       <div className="flex items-center justify-between h-14">
         <Link to="/">
-          <h1 className="font-bold md:font-extrabold text-2xl">Pizza Base Pakistan</h1>
+          <h1 className="font-bold md:font-extrabold text-2xl ml-2">Pizza Base Pakistan</h1>
         </Link>
         <div className="hidden md:flex items-center gap-10">
           <div className="hidden md:flex items-center gap-6">
@@ -114,16 +114,15 @@ const Navbar = () => {
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             </div>
-            <div>
+            <div className=" mr-1">
               {loading ? (
-                <Button className="bg-orange hover:bg-hoverOrange">
+                <Button >
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Please wait
                 </Button>
               ) : (
                 <Button
                   onClick={logout}
-                  className="bg-orange hover:bg-hoverOrange"
                 >
                   Logout
                 </Button>
@@ -147,6 +146,7 @@ const MobileNavbar = () => {
   const { setTheme } = useThemeStore();
   return (
     <Sheet>
+      
       <SheetTrigger asChild>
         <Button
           size={"icon"}
@@ -157,6 +157,7 @@ const MobileNavbar = () => {
         </Button>
       </SheetTrigger>
       <SheetContent className="flex flex-col">
+      <div className=" sha">
         <SheetHeader className="flex flex-row items-center justify-between mt-2">
           <SheetTitle>Pizza Base Pakistan</SheetTitle>
           <DropdownMenu>
@@ -177,6 +178,7 @@ const MobileNavbar = () => {
             </DropdownMenuContent>
           </DropdownMenu>
         </SheetHeader>
+        </div>
         <Separator className="my-2" />
         <SheetDescription className="flex-1">
           <Link
@@ -226,25 +228,17 @@ const MobileNavbar = () => {
             </>
           )}
         </SheetDescription>
-        <SheetFooter className="flex flex-col gap-4">
-          <div className="flex flex-row items-center gap-2">
-            <Avatar>
-              <AvatarImage src={user?.profilePicture} />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <h1 className="font-bold">Pizza base Mernstack</h1>
-          </div>
+        <SheetFooter >
           <SheetClose asChild>
             {loading ? (
-              <Button className="bg-orange hover:bg-hoverOrange">
+              <Button className="bg-orange hover:bg-hoverOrange ">
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Please wait
               </Button>
             ) : (
               <Button
                 onClick={logout}
-                className="bg-orange hover:bg-hoverOrange"
-              >
+                className="bg-orange hover:bg-hoverOrange">
                 Logout
               </Button>
             )}
