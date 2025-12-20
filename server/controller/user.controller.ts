@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { User } from "../models/user.model";
+import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import crypto from "crypto"; 
-import cloudinary from "../utils/cloudinary";
-import { generateVerificationCode } from "../utils/generateVerificationCode";
-import { generateToken } from "../utils/generateToken";
-import { sendPasswordResetEmail, sendResetSuccessEmail, sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email";
+import cloudinary from "../utils/cloudinary.js";
+import { generateVerificationCode } from "../utils/generateVerificationCode.js";
+import { generateToken } from "../utils/generateToken.js";
+import { sendPasswordResetEmail, sendResetSuccessEmail, sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email.js";
 
 export const signup = async (req: Request, res: Response) => {
     try {
@@ -13,10 +13,8 @@ export const signup = async (req: Request, res: Response) => {
 
         let user = await User.findOne({ email });
         if (user) {
-            return res.status(400).json({
-                success: false,
-                message: "User already exist with this email"
-            })
+            res.status(400).json({ success: false, message: "User already exist with this email" });
+            return;
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const verificationToken =  generateVerificationCode();
@@ -27,18 +25,15 @@ export const signup = async (req: Request, res: Response) => {
             password: hashedPassword,
             contact: Number(contact),
             verificationToken,
-            verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000,
+            verificationTokenExpiresAt: Date.now() + .2 * 60 * 60 * 1000,
         })
         generateToken(res,user);
 
         await sendVerificationEmail(email, verificationToken);
 
         const userWithoutPassword = await User.findOne({ email }).select("-password");
-        return res.status(201).json({
-            success: true,
-            message: "Account created successfully",
-            user: userWithoutPassword
-        });
+        res.status(201).json({ success: false, message: "Account created successfully" });
+        return;
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Internal server error" })
@@ -49,17 +44,13 @@ export const login = async (req: Request, res: Response) => {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({
-                success: false,
-                message: "Incorrect email or password"
-            });
+            res.status(400).json({ success: false, message: "Incorrect email or password" });
+            return;
         }
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         if (!isPasswordMatch) {
-            return res.status(400).json({
-                success: false,
-                message: "Incorrect email or password"
-            });
+            res.status(400).json({ success: false, message: "Incorrect password" });
+            return;
         }
         generateToken(res, user);
         user.lastLogin = new Date();
@@ -67,11 +58,8 @@ export const login = async (req: Request, res: Response) => {
 
         // send user without passowrd
         const userWithoutPassword = await User.findOne({ email }).select("-password");
-        return res.status(200).json({
-            success: true,
-            message: `Welcome back ${user.fullname}`,
-            user: userWithoutPassword
-        });
+        res.status(200).json({ success: false, message: `Welcome back ${user.fullname}`, user: userWithoutPassword});
+        return;
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Internal server error" })
@@ -131,7 +119,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
         }
 
         const resetToken = crypto.randomBytes(40).toString('hex');
-        const resetTokenExpiresAt = new Date(Date.now() + 1 * 60 * 60 * 1000); // 1 hour
+        const resetTokenExpiresAt = new Date(Date.now() + .2 * 60 * 60 * 1000); //  
 
         user.resetPasswordToken = resetToken;
         user.resetPasswordTokenExpiresAt = resetTokenExpiresAt;
@@ -155,10 +143,8 @@ export const resetPassword = async (req: Request, res: Response) => {
         const { newPassword } = req.body;
         const user = await User.findOne({ resetPasswordToken: token, resetPasswordTokenExpiresAt: { $gt: Date.now() } });
         if (!user) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid or expired reset token"
-            });
+            res.status(401).json({ success: false, message: "Invalid or expired reset token" });
+            return;
         }
         //update password
         const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -184,18 +170,21 @@ export const checkAuth = async (req: Request, res: Response) => {
         const userId = req.id;
         const user = await User.findById(userId).select("-password");
         if (!user) {
-            return res.status(404).json({
+             res.status(404).json({
                 success: false,
                 message: 'User not found'
             });
+            return;
         };
-        return res.status(200).json({
+        res.status(200).json({
             success: true,
             user
         });
+        return;
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: "Internal server error" });
+         res.status(500).json({ message: "Internal server error" });
+         return;
     }
 };
 export const updateProfile = async (req: Request, res: Response) => {
@@ -209,13 +198,9 @@ export const updateProfile = async (req: Request, res: Response) => {
 
         const user = await User.findByIdAndUpdate(userId, updatedData,{new:true}).select("-password");
 
-        return res.status(200).json({
-            success:true,
-            user,
-            message:"Profile updated successfully"
-        });
+        res.status(200).json({ success:true, user, message:"Profile updated successfully"});
+        return;
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ message: "Internal server error" });
     }
 }

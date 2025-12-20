@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import uploadImageOnCloudinary from "../utils/imageUpload";
-import {Menu} from "../models/menu.model";
-import { Restaurant } from "../models/restaurant.model";
+import uploadImageOnCloudinary from "../utils/imageUpload.js";
+import {Menu} from "../models/menu.model.js";
+import { Restaurant } from "../models/restaurant.model.js";
 import mongoose, { ObjectId } from "mongoose";
 
 export const addMenu = async (req:Request, res:Response) => {
@@ -9,10 +9,11 @@ export const addMenu = async (req:Request, res:Response) => {
         const {name, description, price} = req.body;
         const file = req.file;
         if(!file){
-            return res.status(400).json({
+                res.status(400).json({
                 success:false,
                 message:"Image is required"
             })
+            return;
         };
         const imageUrl = await uploadImageOnCloudinary(file as Express.Multer.File);
         const menu: any = await Menu.create({
@@ -27,14 +28,16 @@ export const addMenu = async (req:Request, res:Response) => {
             await restaurant.save();
         }
 
-        return res.status(201).json({
+            res.status(201).json({
             success:true,
             message:"Menu added successfully",
             menu
         });
+        return;
     } catch (error) {
         console.log(error);
-        return res.status(500).json({message:"Internal server error"}); 
+        res.status(500).json({message:"Internal server error"}); 
+        return;
     }
 }
 export const editMenu = async (req:Request, res:Response) => {
@@ -44,10 +47,11 @@ export const editMenu = async (req:Request, res:Response) => {
         const file = req.file;
         const menu = await Menu.findById(id);
         if(!menu){
-            return res.status(404).json({
+                res.status(404).json({
                 success:false,
                 message:"Menu not found!"
             })
+            return;
         }
         if(name) menu.name = name;
         if(description) menu.description = description;
@@ -59,13 +63,15 @@ export const editMenu = async (req:Request, res:Response) => {
         }
         await menu.save();
 
-        return res.status(200).json({
+            res.status(200).json({
             success:true,
             message:"Menu updated",
             menu,
         })
+        return;
     } catch (error) {
         console.log(error);
-        return res.status(500).json({message:"Internal server error"}); 
+        res.status(500).json({message:"Internal server error"}); 
+        return;
     }
 }

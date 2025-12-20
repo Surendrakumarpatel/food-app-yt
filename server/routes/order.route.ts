@@ -1,6 +1,6 @@
 import express from "express"
-import {isAuthenticated} from "../middlewares/isAuthenticated";
-import { createCheckoutSession, getOrders, stripeWebhook } from "../controller/order.controller";
+import {isAuthenticated} from "../middlewares/isAuthenticated.js";
+import { createCheckoutSession, getOrders, stripeWebhook } from "../controller/order.controller.js";
 const router = express.Router();
 
 router.route("/").get(isAuthenticated, getOrders);

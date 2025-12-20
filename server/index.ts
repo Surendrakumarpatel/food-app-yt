@@ -1,13 +1,13 @@
 import express from "express";
 import dotenv from "dotenv";
-import connectDB from "./db/connectDB";
+import connectDB from "./db/connectDB.js";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import userRoute from "./routes/user.route";
-import restaurantRoute from "./routes/restaurant.route";
-import menuRoute from "./routes/menu.route";
-import orderRoute from "./routes/order.route";
+import userRoute from "./routes/user.route.js";
+import restaurantRoute from "./routes/restaurant.route.js";
+import menuRoute from "./routes/menu.route.js";
+import orderRoute from "./routes/order.route.js";
 import path from "path";
 
 dotenv.config();
